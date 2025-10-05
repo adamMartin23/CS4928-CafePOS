@@ -1,9 +1,9 @@
 package com.cafepos.domain;
 
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class OrderIds {
-    public static long next(){
-        return ThreadLocalRandom.current().nextLong(1000, 10000);
-    }
+    private static final AtomicLong SEQ = new AtomicLong(1000);
+    private OrderIds() {}
+    public static long next() { return SEQ.incrementAndGet(); }
 }
