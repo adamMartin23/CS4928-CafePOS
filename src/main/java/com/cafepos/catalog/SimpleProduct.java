@@ -1,10 +1,11 @@
 package com.cafepos.catalog;
 
 import com.cafepos.common.Money;
+import com.cafepos.common.Priced;
 
 import java.math.BigDecimal;
 
-public final class SimpleProduct implements Product {
+public final class SimpleProduct implements Product, Priced {
     private final String id;
     private final String name;
     private final Money basePrice;
@@ -18,6 +19,10 @@ public final class SimpleProduct implements Product {
         this.id = id;
         this.name = name;
         this.basePrice = basePrice;
+    }
+
+    public Money price() {
+        return basePrice();
     }
 
     @Override public String id() { return id; }
