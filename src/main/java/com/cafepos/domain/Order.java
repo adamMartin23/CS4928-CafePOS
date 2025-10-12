@@ -1,5 +1,7 @@
 package com.cafepos.domain;
 
+import com.cafepos.Observer.OrderObserver;
+import com.cafepos.Observer.OrderPublisher;
 import com.cafepos.common.Money;
 import com.cafepos.payment.PaymentStrategy;
 
@@ -9,11 +11,31 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public final class Order {
+public final class Order implements OrderPublisher {
     private final long id;
     private final List<LineItem> items = new ArrayList<>();
+    private final List<OrderObserver> observers = new ArrayList<>();
 
     public Order(long id) { this.id = id; }
+
+    @Override
+    public void register(OrderObserver o) {
+        if (o != null && !observers.contains(o)){
+            observers.add(o);
+        }
+    }
+
+    @Override
+    public void unregister(OrderObserver o) {
+        observers.remove(o);
+    }
+
+    @Override
+    public void notifyObservers(Order order, String eventType) {
+        for (OrderObserver observer : observers){
+            observer.updated(this, eventType);
+        }
+    }
 
     public void addItem(LineItem li) {
         Objects.requireNonNull(li, "LineItem cannot be null");
@@ -23,8 +45,9 @@ public final class Order {
         }
 
         items.add(li);
-    }
 
+        notifyObservers(this, "itemAdded");
+    }
 
     public Money subtotal() {
         return items.stream().map(LineItem::lineTotal).reduce(Money.zero(), Money::add);
@@ -35,11 +58,6 @@ public final class Order {
         {
             throw new IllegalArgumentException("Tax percent cannot be negative");
         }
-
-        //BigDecimal rate = BigDecimal.valueOf(percent).divide(BigDecimal.valueOf(100));
-        //double tax = subtotal().getAmount().multiply(rate);
-
-        //return Money.of(tax);
 
         BigDecimal rate = BigDecimal.valueOf(percent).divide(BigDecimal.valueOf(100));
         BigDecimal taxAmount = subtotal().getAmount().multiply(rate);
@@ -57,6 +75,12 @@ public final class Order {
             throw new IllegalArgumentException("strategy required");
         }
         strategy.pay(this);
+
+        notifyObservers(this, "paid");
+    }
+
+    public void markReady() {
+        notifyObservers(this, "ready");
     }
 
     public long id(){
@@ -66,4 +90,5 @@ public final class Order {
     public List<LineItem> items(){
         return items;
     }
+
 }

@@ -11,4 +11,9 @@ public final class InMemoryCatalog implements Catalog {
     @Override public Optional<Product> findById(String id) {
         return Optional.ofNullable(byId.get(id));
     }
+
+    // Added for CLIDemo
+    public List<Product> all() {
+        return new ArrayList<>(byId.values());
+    }
 }
