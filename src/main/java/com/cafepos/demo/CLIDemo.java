@@ -2,9 +2,11 @@ package com.cafepos.demo;
 
 import com.cafepos.catalog.*;
 import com.cafepos.common.Money;
+import com.cafepos.common.Priced;
 import com.cafepos.domain.LineItem;
 import com.cafepos.domain.Order;
 import com.cafepos.domain.OrderIds;
+import com.cafepos.factory.ProductFactory;
 import com.cafepos.payment.*;
 import com.cafepos.Observer.*;
 
@@ -24,6 +26,7 @@ public final class CLIDemo {
         order.register(new DeliveryDesk());
         order.register(new CustomerNotifier());
 
+        ProductFactory factory = new ProductFactory();
         Scanner scanner = new Scanner(System.in);
         System.out.println("Welcome to Café POS CLI");
         boolean running = true;
@@ -45,18 +48,31 @@ public final class CLIDemo {
                     for (Product p : ((InMemoryCatalog) catalog).all()) {
                         System.out.println(" → " + p.id() + ": " + p.name() + " (€" + p.basePrice() + ")");
                     }
+                    System.out.println("Available add-ons: SHOT, OAT, SYP, L");
+                    System.out.println("Use recipe format like ESP+SHOT+OAT");
                 }
                 case "2" -> {
-                    System.out.print("Enter product ID: ");
-                    String productId = scanner.nextLine();
-                    Product product = catalog.findById(productId).orElse(null);
-                    if (product == null) {
-                        System.out.println("Product not found.");
+                    System.out.print("Enter recipe (e.g., ESP+SHOT+OAT): ");
+                    String recipe = scanner.nextLine();
+                    Product product;
+                    try {
+                        product = factory.create(recipe);
+                    } catch (IllegalArgumentException e) {
+                        System.out.println("Invalid recipe: " + e.getMessage());
                         break;
                     }
+
                     System.out.print("Enter quantity: ");
-                    int qty = Integer.parseInt(scanner.nextLine());
+                    int qty;
+                    try {
+                        qty = Integer.parseInt(scanner.nextLine());
+                    } catch (NumberFormatException e) {
+                        System.out.println("Invalid quantity.");
+                        break;
+                    }
+
                     order.addItem(new LineItem(product, qty));
+                    System.out.println("Added: " + qty + "x " + product.name());
                 }
                 case "3" -> {
                     System.out.println("Choose payment method:");

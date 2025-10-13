@@ -6,17 +6,26 @@ import com.cafepos.common.Money;
 import com.cafepos.decorator.ExtraShot;
 import com.cafepos.decorator.OatMilk;
 import com.cafepos.decorator.SizeLarge;
+import com.cafepos.domain.LineItem;
+import com.cafepos.domain.Order;
+import com.cafepos.domain.OrderIds;
+import com.cafepos.factory.ProductFactory;
 
-public class Week5Demo {
-
-// decorated.name() => "Espresso + Extra Shot + Oat Milk (Large)"
-// decorated.price() => 2.50 + 0.80 + 0.50 + 0.70 = 4.50
-
+public final class Week5Demo {
     public static void main(String[] args) {
-        Product espresso = new SimpleProduct("P-ESP", "Espresso", Money.of(2.50));
-        Product decorated = new SizeLarge(new OatMilk(new ExtraShot(espresso)));
-
-        System.out.println(decorated.name());
-        System.out.println(((SizeLarge) decorated).price());
+        ProductFactory factory = new ProductFactory();
+        Product p1 = factory.create("ESP+SHOT+OAT"); // Espresso + Extra Shot + Oat
+        Product p2 = factory.create("LAT+L"); // Large Latte
+        Order order = new Order(OrderIds.next());
+        order.addItem(new LineItem(p1, 1));
+        order.addItem(new LineItem(p2, 2));
+        System.out.println("Order #" + order.id());
+        for (LineItem li : order.items()) {
+            System.out.println(" - " + li.product().name() + " x"
+                    + li.quantity() + " = " + li.lineTotal());
+        }
+        System.out.println("Subtotal: " + order.subtotal());
+        System.out.println("Tax (10%): " + order.taxAtPercent(10));
+        System.out.println("Total: " + order.totalWithTax(10));
     }
 }
