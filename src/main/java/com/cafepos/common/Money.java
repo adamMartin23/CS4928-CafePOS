@@ -15,6 +15,8 @@ public final class Money implements Comparable<Money> {
         return new Money(bd);
     }
 
+    public static Money of(BigDecimal value) { return new Money(value); }
+
     public static Money zero() {
         return new Money(BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP));
     }
@@ -43,6 +45,7 @@ public final class Money implements Comparable<Money> {
         return new Money(this.amount.multiply(BigDecimal.valueOf(qty)));
     }
 
+    public BigDecimal asBigDecimal() { return amount; }
 
     public BigDecimal getAmount()
     {
