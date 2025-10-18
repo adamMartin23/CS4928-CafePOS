@@ -18,7 +18,7 @@ public class decoratorTest {
                 Money.of(2.50));
         Product withShot = new ExtraShot(espresso);
         assertEquals("Espresso + Extra Shot", withShot.name());
-// if using Priced interface:
+        // if using Priced interface:
         assertEquals(Money.of(3.30), ((Priced) withShot).price());
     }
     @Test void decorator_stacks() {
