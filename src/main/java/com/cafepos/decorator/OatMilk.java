@@ -1,7 +1,6 @@
 package com.cafepos.decorator;
 import com.cafepos.catalog.Product;
 import com.cafepos.common.Money;
-import com.cafepos.common.Priced;
 
 public final class OatMilk extends ProductDecorator {
     private static final Money SURCHARGE = Money.of(0.50);

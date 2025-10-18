@@ -2,7 +2,6 @@ package com.cafepos.demo;
 
 import com.cafepos.catalog.*;
 import com.cafepos.common.Money;
-import com.cafepos.common.Priced;
 import com.cafepos.domain.LineItem;
 import com.cafepos.domain.Order;
 import com.cafepos.domain.OrderIds;

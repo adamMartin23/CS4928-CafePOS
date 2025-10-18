@@ -3,7 +3,6 @@ package com.cafepos.decorator;
 
 import com.cafepos.catalog.Product;
 import com.cafepos.common.Money;
-import com.cafepos.common.Priced;
 
 public final class ExtraShot extends ProductDecorator {
 

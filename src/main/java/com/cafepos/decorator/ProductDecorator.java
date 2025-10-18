@@ -2,7 +2,6 @@ package com.cafepos.decorator;
 
 import com.cafepos.catalog.Product;
 import com.cafepos.common.Money;
-import com.cafepos.common.Priced;
 
 public abstract class ProductDecorator implements Product, Priced {
 

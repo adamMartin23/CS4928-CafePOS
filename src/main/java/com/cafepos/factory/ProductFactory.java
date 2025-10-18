@@ -6,7 +6,7 @@ import com.cafepos.decorator.*;
 public final class ProductFactory {
     public Product create(String recipe) {
         if (recipe == null || recipe.isBlank()) throw new IllegalArgumentException("recipe required");
-
+        //System.out.println("recipe string is " + recipe);
         String[] raw = recipe.split("\\+"); // literal '+'
         String[] parts = java.util.Arrays.stream(raw).map(String::trim).map(String::toUpperCase).toArray(String[]::new);
 

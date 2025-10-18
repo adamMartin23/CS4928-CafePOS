@@ -3,7 +3,6 @@ package com.cafepos.decorator;
 import com.cafepos.catalog.Product;
 import com.cafepos.catalog.SimpleProduct;
 import com.cafepos.common.Money;
-import com.cafepos.common.Priced;
 import com.cafepos.domain.LineItem;
 import com.cafepos.domain.Order;
 import com.cafepos.factory.ProductFactory;
