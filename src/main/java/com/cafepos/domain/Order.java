@@ -16,6 +16,8 @@ public final class Order implements OrderPublisher {
     private final List<LineItem> items = new ArrayList<>();
     private final List<OrderObserver> observers = new ArrayList<>();
 
+    private Money total;
+
     public Order(long id) { this.id = id; }
 
     @Override
@@ -91,4 +93,11 @@ public final class Order implements OrderPublisher {
         return items;
     }
 
+    public void setTotal(Money total) {
+        this.total = total;
+    }
+
+    public Money total() {
+        return (total != null) ? total : totalWithTax(10);
+    }
 }

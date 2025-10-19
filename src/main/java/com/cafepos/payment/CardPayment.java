@@ -1,6 +1,7 @@
 package com.cafepos.payment;
 
 import com.cafepos.domain.Order;
+import com.cafepos.pricing.PricingService;
 
 public final class CardPayment implements PaymentStrategy {
     private final String cardNumber;
@@ -12,6 +13,7 @@ public final class CardPayment implements PaymentStrategy {
     @Override
     public void pay(Order order) {
         String masked = "****" + cardNumber.substring(cardNumber.length() - 4);
-        System.out.println("[Card] Customer paid " + order.totalWithTax(10) + " EUR with card " + masked);
+        System.out.println("[Card] Customer paid " + order.total() + " EUR with card " + masked);
     }
+
 }

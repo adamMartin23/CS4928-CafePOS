@@ -36,6 +36,7 @@ public final class CheckoutService {
         LineItem item = new LineItem(product, qty);
         Order order = new Order(OrderIds.next());
         order.addItem(item);
+        order.setTotal(result.total());
 
         // Adapt to your Week-3 signature; if your strategy expects an Order, pass the real one here.
         // If your strategy prints based on totals, wrap in a tiny adapter and call after pricing.
