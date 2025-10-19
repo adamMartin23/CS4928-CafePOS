@@ -31,7 +31,7 @@ public class CheckoutServiceTests {
         var payment = new TestPaymentStrategy();
 
         var service = new CheckoutService(factory, pricing, printer, 10);
-        String receipt = service.checkout(2001L, "LAT+L+OAT", 1, payment);
+        String receipt = service.checkout("LAT+L+OAT", 1, payment);
 
         // LAT = 3.20, L = +0.70, OAT = +0.50 → subtotal = 4.40
         // Tax = 10% of 4.50 = 0.45 → total = 4.95
@@ -53,7 +53,7 @@ public class CheckoutServiceTests {
         var payment = new TestPaymentStrategy();
 
         var service = new CheckoutService(factory, pricing, printer, 10);
-        String receipt = service.checkout(2002L, "CAP+SHOT+SYP", 2, payment);
+        String receipt = service.checkout("CAP+SHOT+SYP", 2, payment);
 
         // CAP = 3.00, SHOT = +0.80, SYP = +0.40 → unit = 4.20
         // subtotal = 8.40, tax = 0.84, total = 9.24

@@ -4,6 +4,7 @@ import com.cafepos.catalog.Product;
 import com.cafepos.common.Money;
 import com.cafepos.domain.LineItem;
 import com.cafepos.domain.Order;
+import com.cafepos.domain.OrderIds;
 import com.cafepos.factory.ProductFactory;
 import com.cafepos.io.ReceiptPrinter;
 import com.cafepos.payment.PaymentStrategy;
@@ -22,7 +23,7 @@ public final class CheckoutService {
         this.taxPercent = taxPercent;
     }
 
-    public String checkout(long orderId, String recipe, int qty, PaymentStrategy payment) {
+    public String checkout(String recipe, int qty, PaymentStrategy payment) {
         Product product = factory.create(recipe);
         if (qty <= 0){
             qty = 1;
@@ -33,7 +34,7 @@ public final class CheckoutService {
         var result = pricing.price(subtotal);
 
         LineItem item = new LineItem(product, qty);
-        Order order = new Order(orderId);
+        Order order = new Order(OrderIds.next());
         order.addItem(item);
 
         // Adapt to your Week-3 signature; if your strategy expects an Order, pass the real one here.
