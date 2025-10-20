@@ -51,6 +51,17 @@ public final class Order implements OrderPublisher {
         notifyObservers(this, "itemAdded");
     }
 
+    public boolean removeItem(String productId) {
+        for (LineItem item : items) {
+            if (item.product().id().equalsIgnoreCase(productId)) {
+                items.remove(item);
+                notifyObservers(this, "itemRemoved");
+                return true;
+            }
+        }
+        return false;
+    }
+
     public Money subtotal() {
         return items.stream().map(LineItem::lineTotal).reduce(Money.zero(), Money::add);
     }
