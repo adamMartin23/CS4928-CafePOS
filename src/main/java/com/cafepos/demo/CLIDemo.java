@@ -125,17 +125,17 @@ public final class CLIDemo {
                 }
                 case "7" -> {
                     int taxPercent = 10;
-                    System.out.print("Enter recipe (e.g., ESP+SHOT+OAT): ");
-                    String recipe = scanner.nextLine();
+                    //System.out.print("Enter recipe (e.g., ESP+SHOT+OAT): ");
+                    //String recipe = scanner.nextLine();
 
-                    System.out.print("Enter quantity: ");
-                    int qty;
-                    try {
-                        qty = Integer.parseInt(scanner.nextLine());
-                    } catch (NumberFormatException e) {
-                        System.out.println("Invalid quantity.");
-                        break;
-                    }
+                    //System.out.print("Enter quantity: ");
+                    //int qty;
+                    //try {
+                    //    qty = Integer.parseInt(scanner.nextLine());
+                    //} catch (NumberFormatException e) {
+                    //    System.out.println("Invalid quantity.");
+                    //    break;
+                    //}
 
                     System.out.println("Choose discount type:");
                     System.out.println("1. No Discount");
@@ -202,7 +202,8 @@ public final class CLIDemo {
                     ReceiptPrinter printer = new ReceiptPrinter();
                     CheckoutService checkoutService = new CheckoutService(factory, pricing, printer, taxPercent);
 
-                    String receipt = checkoutService.checkout(recipe, qty, payment);
+                    //String receipt = checkoutService.checkout(recipe, qty, payment);
+                    String receipt = checkoutService.checkout(order, payment);
                     System.out.println("\n--- Receipt ---");
                     System.out.println(receipt);
                 }

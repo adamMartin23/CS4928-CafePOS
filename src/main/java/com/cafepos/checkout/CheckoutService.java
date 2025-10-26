@@ -44,4 +44,15 @@ public final class CheckoutService {
 
         return printer.format(recipe, qty, result, taxPercent);
     }
+
+    public String checkout(Order order, PaymentStrategy payment){
+        var result = pricing.price(order.subtotal());
+        order.setTotal(result.total());
+
+        // Adapt to your Week-3 signature; if your strategy expects an Order, pass the real one here.
+        // If your strategy prints based on totals, wrap in a tiny adapter and call after pricing.
+        order.pay(payment);
+
+        return printer.format(order, result, taxPercent);
+    }
 }
