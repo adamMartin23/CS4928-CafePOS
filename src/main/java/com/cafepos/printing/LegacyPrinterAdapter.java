@@ -8,7 +8,7 @@ public final class LegacyPrinterAdapter implements Printer {
     public LegacyPrinterAdapter(LegacyThermalPrinter adaptee) {
         this.adaptee = adaptee;
     }
-    
+
     @Override
     public void print(String receiptText) {
         byte[] escpos = receiptText.getBytes(StandardCharsets.UTF_8);
