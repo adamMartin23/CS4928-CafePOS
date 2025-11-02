@@ -13,8 +13,7 @@ class LegacyPrinterAdapterTest {
     @org.junit.jupiter.api.Test
     void adapter_converts_text_to_bytes() {
         var fake = new FakeLegacy();
-        com.cafepos.printing.Printer p = new
-                com.cafepos.printing.LegacyPrinterAdapter(fake);
+        com.cafepos.printing.Printer p = new com.cafepos.printing.LegacyPrinterAdapter(fake);
         p.print("ABC");
         org.junit.jupiter.api.Assertions.assertTrue(fake.lastLen >= 3);
     }
