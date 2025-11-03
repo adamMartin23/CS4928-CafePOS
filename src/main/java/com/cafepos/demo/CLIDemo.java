@@ -2,6 +2,7 @@ package com.cafepos.demo;
 
 import com.cafepos.catalog.*;
 import com.cafepos.checkout.CheckoutService;
+import com.cafepos.command.*;
 import com.cafepos.common.Money;
 import com.cafepos.domain.LineItem;
 import com.cafepos.domain.Order;
@@ -11,6 +12,9 @@ import com.cafepos.io.ReceiptPrinter;
 import com.cafepos.payment.*;
 import com.cafepos.Observer.*;
 import com.cafepos.pricing.*;
+import com.cafepos.printing.LegacyPrinterAdapter;
+import com.cafepos.printing.Printer;
+import vendor.legacy.LegacyThermalPrinter;
 
 import java.util.Scanner;
 
@@ -29,6 +33,10 @@ public final class CLIDemo {
         order.register(new CustomerNotifier());
 
         ProductFactory factory = new ProductFactory();
+
+        OrderService service = new OrderService(order);
+        PosRemote remote = new PosRemote(3);
+
         Scanner scanner = new Scanner(System.in);
         System.out.println("Welcome to Café POS CLI");
         boolean running = true;
@@ -42,6 +50,11 @@ public final class CLIDemo {
             System.out.println("5. Mark Order Ready");
             System.out.println("6. View Order Summary");
             System.out.println("7. Checkout");
+            System.out.println("8. Add Item via Command");
+            System.out.println("9. Undo Last Command");
+            System.out.println("10. Print Receipt via Adapter");
+            System.out.println("11. Pay via Command Pattern");
+            System.out.println("12. Run MacroCommand (Combo Order)");
             System.out.println("0. Exit");
 
             String choice = scanner.nextLine();
@@ -207,6 +220,93 @@ public final class CLIDemo {
                     System.out.println("\n--- Receipt ---");
                     System.out.println(receipt);
                 }
+                case "8" -> {
+                    System.out.print("Enter recipe (e.g., ESP+SHOT+OAT): ");
+                    String recipe = scanner.nextLine();
+                    System.out.print("Enter quantity: ");
+                    int qty;
+                    try {
+                        qty = Integer.parseInt(scanner.nextLine());
+                    } catch (NumberFormatException e) {
+                        System.out.println("Invalid quantity.");
+                        break;
+                    }
+
+                    Command addCmd = new AddItemCommand(service, recipe, qty);
+                    remote.setSlot(0, addCmd);
+                    remote.press(0);
+                }
+                case "9" -> remote.undo();
+                case "10" -> {
+                    ReceiptPrinter printer = new ReceiptPrinter();
+                    String receipt = "Order (LAT+L) x2\nSubtotal: 7.80\nTax (10%): 0.78\nTotal: 8.58";
+                    Printer adapter = new LegacyPrinterAdapter(new LegacyThermalPrinter());
+                    adapter.print(receipt);
+                    System.out.println("[CLI] Receipt sent to thermal printer.");
+                }
+                case "11" -> {
+                    System.out.println("Choose payment method:");
+                    System.out.println("1. Cash");
+                    System.out.println("2. Card");
+                    System.out.println("3. Wallet");
+
+                    PaymentStrategy strategy = new CashPayment(); // default
+                    String paymentChoice = scanner.nextLine();
+
+                    switch (paymentChoice) {
+                        case "1" -> strategy = new CashPayment();
+                        case "2" -> {
+                            System.out.print("Enter card number: ");
+                            String cardNumber = scanner.nextLine();
+                            strategy = new CardPayment(cardNumber);
+                        }
+                        case "3" -> {
+                            System.out.print("Enter wallet ID: ");
+                            String walletId = scanner.nextLine();
+                            strategy = new WalletPayment(walletId);
+                        }
+                        default -> System.out.println("Invalid payment method. Using default CashPayment.");
+                    }
+
+                    Command payCmd = new PayOrderCommand(service, strategy, 10);
+                    remote.setSlot(1, payCmd);
+                    remote.press(1);
+                }
+
+                case "12" -> {
+                    System.out.println("Choose payment method:");
+                    System.out.println("1. Cash");
+                    System.out.println("2. Card");
+                    System.out.println("3. Wallet");
+
+                    PaymentStrategy strategy = new CashPayment(); // default
+                    String paymentChoice = scanner.nextLine();
+
+                    switch (paymentChoice) {
+                        case "1" -> strategy = new CashPayment();
+                        case "2" -> {
+                            System.out.print("Enter card number: ");
+                            String cardNumber = scanner.nextLine();
+                            strategy = new CardPayment(cardNumber);
+                        }
+                        case "3" -> {
+                            System.out.print("Enter wallet ID: ");
+                            String walletId = scanner.nextLine();
+                            strategy = new WalletPayment(walletId);
+                        }
+                        default -> System.out.println("Invalid payment method. Using default CashPayment.");
+                    }
+
+                    Command addEspresso = new AddItemCommand(service, "ESP+SHOT+OAT", 1); // 3.80
+                    Command addLatte = new AddItemCommand(service, "LAT+L", 2);           // 7.80
+                    Command pay = new PayOrderCommand(service, strategy, 10);
+
+                    Command combo = new MacroCommand(addEspresso, addLatte, pay);
+                    remote.setSlot(2, combo);
+                    remote.press(2);
+                }
+
+
                 case "0" -> {
                     running = false;
                     System.out.println("Goodbye!");
