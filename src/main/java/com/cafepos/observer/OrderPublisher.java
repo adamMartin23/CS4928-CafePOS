@@ -1,4 +1,4 @@
-package com.cafepos.Observer;
+package com.cafepos.observer;
 
 import com.cafepos.domain.Order;
 

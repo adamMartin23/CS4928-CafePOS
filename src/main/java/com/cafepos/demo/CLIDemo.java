@@ -10,7 +10,7 @@ import com.cafepos.domain.OrderIds;
 import com.cafepos.factory.ProductFactory;
 import com.cafepos.io.ReceiptPrinter;
 import com.cafepos.payment.*;
-import com.cafepos.Observer.*;
+import com.cafepos.observer.*;
 import com.cafepos.pricing.*;
 import com.cafepos.printing.LegacyPrinterAdapter;
 import com.cafepos.printing.Printer;

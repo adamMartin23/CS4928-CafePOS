@@ -1,8 +1,8 @@
 package com.cafepos.demo;
 
-import com.cafepos.Observer.CustomerNotifier;
-import com.cafepos.Observer.DeliveryDesk;
-import com.cafepos.Observer.KitchenDisplay;
+import com.cafepos.observer.CustomerNotifier;
+import com.cafepos.observer.DeliveryDesk;
+import com.cafepos.observer.KitchenDisplay;
 import com.cafepos.catalog.Catalog;
 import com.cafepos.catalog.InMemoryCatalog;
 import com.cafepos.catalog.SimpleProduct;
